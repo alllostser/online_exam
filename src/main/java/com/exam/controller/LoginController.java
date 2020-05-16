@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -42,10 +40,9 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/login.do")
-    public ServerResponse login(HttpServletRequest request,String username, String password, String code) {
+    public ServerResponse login(String username, String password, String code) {
         //shiro
         Subject subject = SecurityUtils.getSubject();
-
         //获取验证码
         if (StringUtils.isBlank(code)) {
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.CODE_IS_EMPTY.getStatus(),Consts.StatusEnum.CODE_IS_EMPTY.getDesc());
@@ -57,7 +54,6 @@ public class LoginController {
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.PASSWORD_NOT_EMPTY.getStatus(),Consts.StatusEnum.PASSWORD_NOT_EMPTY.getDesc());
         }
         String trueCode = CodeCacheUtils.getKey(Constants.VALIDATE_CODE);
-        System.out.println("****"+trueCode+"*****");
         //获取正确的验证码
         if (trueCode == null) {
             return ServerResponse.serverResponseByFail(0,"session 超时");
@@ -105,14 +101,6 @@ public class LoginController {
         } else {
             return ServerResponse.serverResponseByFail(101,errorMsg);
         }
-    }
-    @RequestMapping("/test.do")
-    public ServerResponse test(HttpSession session){
-        SysUser user = (SysUser) session.getAttribute(Consts.StatusEnum.LOGIN_USER);
-        System.out.println(user);
-        String  code = (String) session.getAttribute(Constants.VALIDATE_CODE);
-        System.out.println("###"+code+"###");
-        return null;
     }
     /**
      * 获取验证码图片和文本(验证码文本会保存在HttpSession中)
