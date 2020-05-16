@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
@@ -38,11 +39,10 @@ public class LoginController {
      * @param username
      * @param password
      * @param code
-     * @param session
      * @return
      */
     @RequestMapping("/login.do")
-    public ServerResponse login(String username, String password, String code,HttpSession session) {
+    public ServerResponse login(HttpServletRequest request,String username, String password, String code) {
         //shiro
         Subject subject = SecurityUtils.getSubject();
 
@@ -100,7 +100,8 @@ public class LoginController {
         if (StringUtils.isBlank(errorMsg)) {
             SysUser principal = (SysUser) SecurityUtils.getSubject().getPrincipal();
             UserVo userVo = PoToVoUtil.SysUserToVo(principal);
-            return ServerResponse.serverResponseBySucess(sessionid);
+
+            return ServerResponse.serverResponseBySucess("登陆成功",sessionid);
         } else {
             return ServerResponse.serverResponseByFail(101,errorMsg);
         }

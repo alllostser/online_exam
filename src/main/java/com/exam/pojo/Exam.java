@@ -1,10 +1,12 @@
 package com.exam.pojo;
 
+import com.exam.utils.BaseEntity;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 @Data
-public class Exam {
+public class Exam extends BaseEntity {
     private Integer examId;
 
     private String examName;
@@ -15,13 +17,10 @@ public class Exam {
 
     private Integer reviewerId;
 
-    private Long createBy;
-
     private Date createDate;
-
-    private Long updateBy;
 
     private Date updateDate;
 
     private Long score;
+
 }

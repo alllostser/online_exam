@@ -24,7 +24,7 @@
     from exam
     <where>
       <if test="examName != null and examName != ''">
-        and exam_name = #{examName}
+        and exam_name like CONCAT('%',#{examName},'%')
       </if>
       <if test="reviewerId != null">
         and reviewer_id = #{reviewerId}

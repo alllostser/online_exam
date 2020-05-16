@@ -1,8 +1,14 @@
 package com.exam.pojo;
 
-import java.util.Date;
+import com.exam.utils.BaseEntity;
+import lombok.Data;
 
-public class Question {
+import java.util.Date;
+/**
+ * 试题实体类
+ * */
+@Data
+public class Question extends BaseEntity {
     private Integer id;
 
     private String type;
@@ -25,91 +31,9 @@ public class Question {
 
     private Date updateDate;
 
-    public Integer getId() {
-        return id;
-    }
+    private String title;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private String answer;
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
-
-    public String getOptionA() {
-        return optionA;
-    }
-
-    public void setOptionA(String optionA) {
-        this.optionA = optionA == null ? null : optionA.trim();
-    }
-
-    public String getOptionB() {
-        return optionB;
-    }
-
-    public void setOptionB(String optionB) {
-        this.optionB = optionB == null ? null : optionB.trim();
-    }
-
-    public String getOptionC() {
-        return optionC;
-    }
-
-    public void setOptionC(String optionC) {
-        this.optionC = optionC == null ? null : optionC.trim();
-    }
-
-    public String getOptionD() {
-        return optionD;
-    }
-
-    public void setOptionD(String optionD) {
-        this.optionD = optionD == null ? null : optionD.trim();
-    }
-
-    public Long getScore() {
-        return score;
-    }
-
-    public void setScore(Long score) {
-        this.score = score;
-    }
-
-    public Integer getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Integer createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Integer getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Integer updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
+    private String analyse;
 }

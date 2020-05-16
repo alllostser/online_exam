@@ -27,7 +27,7 @@ public class UserRealm extends AuthorizingRealm {
 
         //当前登录用户，账号
         SysUser shiroUser = (SysUser) principalCollection.getPrimaryPrincipal();
-        System.out.println(shiroUser);
+//        System.out.println(shiroUser);
         Integer userType = shiroUser.getUserType();
         String userType1 = userType.toString();
         if ("1".equals(userType1)) {

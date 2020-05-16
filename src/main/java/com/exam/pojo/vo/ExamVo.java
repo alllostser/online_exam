@@ -1,11 +1,12 @@
 package com.exam.pojo.vo;
 
 
+import com.exam.utils.BaseEntity;
 import lombok.Data;
 
 import java.util.Date;
 @Data
-public class ExamVo {
+public class ExamVo extends BaseEntity {
     private static final long serialVersionUID = 922283745093904434L;
 
     private Integer examId;

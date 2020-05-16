@@ -28,21 +28,21 @@ public class ExamController {
      * @return
      */
     @GetMapping("/list.do")
-    @CrossOrigin
     public ServerResponse list(
-            @RequestParam(required = false)Exam exam,
+            Exam exam,
             @RequestParam(value = "pageNum",required = false,defaultValue = "1") Integer pageNum,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize,
             @RequestParam(required = false,defaultValue = "")String orderBy)
     {
         try {
+            System.out.println("-------"+exam+"********");
             ServerResponse response = examService.findExamList(exam,pageNum,pageSize,orderBy);
             return response;
         }catch (UnauthorizedException exception){//无权限
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
         }
     }
-    public ServerResponse addExam(Exam exam) {
+    public ServerResponse addExam(@RequestBody Exam exam) {
         try {
 //            ServerResponse response = examService.findExamList(exam,pageNum,pageSize,orderBy);
 //            return response;

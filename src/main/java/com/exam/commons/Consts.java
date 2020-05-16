@@ -62,5 +62,40 @@ public class Consts {
             this.desc = desc;
         }
     }
+    public enum QuestionStatusEnum {
+        TITLE_CANNOT_BE_NULL(201,"问题的题干不能为空"),
+        SCORE_NOT_TRUE(201,"请填写正确的分值"),
+        TRUE_ANSWER_CANNOT_BE_NULL(101,"正确答案不能为空"),
+        OPTION_COUNT_NOT_TRUE(202,"选项数量不正确"),
+        ;
+//        问题类型：1表示单选，2表示多选，3表示填空，4表示判断，5表示问答
+        public static final String SINGLE_CHOICE="1";
+        public static final String MULTIPLE_CHOICE="2";
+        public static final String COMPLETION="3";
+        public static final String TRUE_OR_FALSE_QUESTION="4";
+        public static final String ESSAY_QUESTION="5";
+        private int status; //状态码值
+        private String desc;//对状态码描述
 
+        QuestionStatusEnum(int status, String desc) {
+            this.status = status;
+            this.desc = desc;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+    }
 }
