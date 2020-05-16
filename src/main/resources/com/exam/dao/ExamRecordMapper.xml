@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.ExamRecordMapper">
+  <resultMap id="BaseResultMap" type="com.exam.pojo.ExamRecord">
+    <id column="exam_id" jdbcType="INTEGER" property="examId" />
+    <id column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <id column="question_id" jdbcType="INTEGER" property="questionId" />
+    <result column="final_score" jdbcType="DECIMAL" property="finalScore" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.exam.pojo.ExamRecord">
+    <result column="answer" jdbcType="LONGVARCHAR" property="answer" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    exam_id, stu_id, question_id, final_score
+  </sql>
+  <sql id="Blob_Column_List">
+    answer
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.exam.pojo.ExamRecordKey" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from exam_record
+    where exam_id = #{examId,jdbcType=INTEGER}
+      and stu_id = #{stuId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.exam.pojo.ExamRecordKey">
+    delete from exam_record
+    where exam_id = #{examId,jdbcType=INTEGER}
+      and stu_id = #{stuId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.exam.pojo.ExamRecord">
+    insert into exam_record (exam_id, stu_id, question_id, 
+      final_score, answer)
+    values (#{examId,jdbcType=INTEGER}, #{stuId,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER}, 
+      #{finalScore,jdbcType=DECIMAL}, #{answer,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.exam.pojo.ExamRecord">
+    insert into exam_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="examId != null">
+        exam_id,
+      </if>
+      <if test="stuId != null">
+        stu_id,
+      </if>
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="finalScore != null">
+        final_score,
+      </if>
+      <if test="answer != null">
+        answer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="examId != null">
+        #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null">
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="finalScore != null">
+        #{finalScore,jdbcType=DECIMAL},
+      </if>
+      <if test="answer != null">
+        #{answer,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.exam.pojo.ExamRecord">
+    update exam_record
+    <set>
+      <if test="finalScore != null">
+        final_score = #{finalScore,jdbcType=DECIMAL},
+      </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where exam_id = #{examId,jdbcType=INTEGER}
+      and stu_id = #{stuId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.exam.pojo.ExamRecord">
+    update exam_record
+    set final_score = #{finalScore,jdbcType=DECIMAL},
+      answer = #{answer,jdbcType=LONGVARCHAR}
+    where exam_id = #{examId,jdbcType=INTEGER}
+      and stu_id = #{stuId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.exam.pojo.ExamRecord">
+    update exam_record
+    set final_score = #{finalScore,jdbcType=DECIMAL}
+    where exam_id = #{examId,jdbcType=INTEGER}
+      and stu_id = #{stuId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+</mapper>
