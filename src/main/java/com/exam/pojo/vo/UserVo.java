@@ -27,4 +27,7 @@ public class UserVo implements Serializable {
 
     private Integer userType;
 
+    //在考试管理的时候确定学生是否选中
+    private Boolean studentCheckFlag = false;
+
 }

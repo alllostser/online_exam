@@ -68,4 +68,14 @@
       question_id = #{questionId,jdbcType=INTEGER}
     where eq_id = #{eqId,jdbcType=INTEGER}
   </update>
+<!--  通过试卷id查找试题id-->
+  <select id="findQuestionIdsByExamId" parameterType="integer" resultType="integer">
+    select question_id
+    from exam_question
+    where exam_id=#{examId}
+  </select>
+<!--  通过试卷id删除数据-->
+  <delete id="deleteByExamId" parameterType="integer">
+    delete from exam_question where exam_id=#{examId}
+  </delete>
 </mapper>

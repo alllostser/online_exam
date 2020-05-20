@@ -3,7 +3,7 @@ package com.exam.commons;
 public class Consts {
     public enum StatusEnum {
         //参数非空判断
-        PARAM_NOT_EMPTY(101,"该参数不能为空"),
+        PARAM_NOT_EMPTY(101,"参数不能为空"),
         USERNAME_NOT_EMPTY(101,"用户名不能为空"),
         PASSWORD_NOT_EMPTY(101,"密码不能为空"),
         CODE_IS_EMPTY(101,"验证码为空"),
@@ -78,6 +78,34 @@ public class Consts {
         private String desc;//对状态码描述
 
         QuestionStatusEnum(int status, String desc) {
+            this.status = status;
+            this.desc = desc;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+    }
+    public enum ExamStatusEnum {
+        ADD_EXAM_FAILED(300,"添加试卷失败"),
+        ;
+
+        private int status; //状态码值
+        private String desc;//对状态码描述
+
+        ExamStatusEnum(int status, String desc) {
             this.status = status;
             this.desc = desc;
         }

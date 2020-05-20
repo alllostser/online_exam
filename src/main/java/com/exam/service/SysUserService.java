@@ -3,6 +3,8 @@ package com.exam.service;
 import com.exam.commons.ServerResponse;
 import com.exam.pojo.SysUser;
 
+import java.util.List;
+
 public interface SysUserService {
     /**
      * 添加用户
@@ -33,4 +35,9 @@ public interface SysUserService {
      *登录
      */
     SysUser findSysUserByLoginName(String username);
+
+    /**
+     * 根据id查找教师集合
+     * */
+    List<SysUser> findUserByIds(List<Integer> teacherids);
 }

@@ -55,7 +55,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @return
      */
     @Override
-    @RequiresRoles({"admin"})
+    @RequiresRoles({"teacher"})
     public ServerResponse findUserById(Integer id) {
         //step:1参数非空判断
         if (id == null || id < 0) {
@@ -193,6 +193,15 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser findSysUserByLoginName(String username) {
         SysUser sysUser = sysUserMapper.selectByUsernameAndPassword2(username);
         return sysUser;
+    }
+
+    /**
+     * 根据id查找教师集合
+     * */
+    @Override
+    public List<SysUser> findUserByIds(List<Integer> teacherids){
+        List<SysUser> teachers = sysUserMapper.findUserByIds(teacherids);
+        return teachers;
     }
 
 }

@@ -39,4 +39,9 @@ public interface SysUserMapper {
      * 用户模糊查询
      * */
     List<SysUser> selectByUserTypeAndkeyword(@Param("userType") Integer userType, @Param("keyword") String keyword);
+
+    /**
+     * 根据id查找教师集合
+     * */
+    List<SysUser> findUserByIds(List<Integer> teacherids);
 }

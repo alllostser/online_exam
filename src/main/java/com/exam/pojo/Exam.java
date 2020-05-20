@@ -4,9 +4,10 @@ import com.exam.utils.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 @Data
-public class Exam extends BaseEntity {
+public class Exam extends BaseEntity{
     private Integer examId;
 
     private String examName;
@@ -17,10 +18,12 @@ public class Exam extends BaseEntity {
 
     private Integer reviewerId;
 
+    private Integer createBy;
+
     private Date createDate;
 
     private Date updateDate;
 
-    private Long score;
+    private BigDecimal score;
 
 }

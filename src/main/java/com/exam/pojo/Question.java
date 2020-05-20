@@ -3,6 +3,7 @@ package com.exam.pojo;
 import com.exam.utils.BaseEntity;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 /**
  * 试题实体类
@@ -21,7 +22,7 @@ public class Question extends BaseEntity {
 
     private String optionD;
 
-    private Long score;
+    private BigDecimal score;
 
     private Integer createBy;
 

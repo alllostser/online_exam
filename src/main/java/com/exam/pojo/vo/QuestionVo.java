@@ -3,6 +3,8 @@ package com.exam.pojo.vo;
 import com.exam.utils.BaseEntity;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class QuestionVo extends BaseEntity {
     private static final long serialVersionUID = 850681683013092951L;
@@ -25,10 +27,13 @@ public class QuestionVo extends BaseEntity {
     //解析
     private String analyse;
     //分值
-    private Double score;
+    private BigDecimal score;
     //该题的最终得分
     private Double finalScore;
 
+    private String createDate;
+
+    private String updateDate;
     //单选或者多选的选中（修改试题的正确答案回显）
     private String optionAChecked;
     private String optionBChecked;
@@ -46,4 +51,6 @@ public class QuestionVo extends BaseEntity {
     private String optionDCheckedStu;
     private String judgeAnswer1Stu;//正确
     private String judgeAnswer0Stu;//错误
+
+    private boolean questonChecked=false;
 }

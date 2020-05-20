@@ -2,23 +2,31 @@ package com.exam.controller;
 
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
-import com.exam.pojo.Question;
-import com.exam.service.QuestionService;
+import com.exam.pojo.Exam;
+import com.exam.pojo.vo.ExamVo;
+import com.exam.service.ExamService;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @ClassName ExaminationPaperContorller
+ * @Description //TODO
+ * @Author GuXinYu
+ * @Date 2020/5/18 18:22
+ * @Version 1.0
+ **/
 @RestController
-@RequestMapping("/question")
 @CrossOrigin
-public class QuestionController {
+@RequestMapping("/exam/paper")
+public class ExaminationPaperContorller {
     @Resource
-    private QuestionService questionService;
+    private ExamService examService;
 
     /**
-     *通过实体作为筛选条件查询试题列表
-     * @param question
+     * 试卷列表
+     * @param exam
      * @param pageNum
      * @param pageSize
      * @param orderBy
@@ -26,14 +34,14 @@ public class QuestionController {
      */
     @GetMapping("/list.do")
     public ServerResponse list(
-            Question question,
+            Exam exam,
             @RequestParam(value = "pageNum",required = false,defaultValue = "1") Integer pageNum,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize,
             @RequestParam(required = false,defaultValue = "")String orderBy)
     {
         try {
-            System.out.println("-------"+question+"********");
-            ServerResponse response = questionService.findQuestionList(question,pageNum,pageSize,orderBy);
+            System.out.println("-------"+exam+"********");
+            ServerResponse response = examService.findExamList(exam,pageNum,pageSize,orderBy);
             return response;
         }catch (UnauthorizedException exception){//无权限
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
@@ -41,14 +49,14 @@ public class QuestionController {
     }
 
     /**
-     * 添加试题
-     * @param question
+     * 添加试卷
+     * @param examVo
      * @return
      */
     @PostMapping("/add.do")
-    public ServerResponse addQuestion(Question question) {
+    public ServerResponse addExam(@RequestBody ExamVo examVo) {
         try {
-            ServerResponse response = questionService.insert(question);
+            ServerResponse response = examService.addExam(examVo);
             return response;
         }catch (UnauthorizedException exception){//无权限
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
@@ -56,31 +64,38 @@ public class QuestionController {
     }
 
     /**
-     * 修改试题
-     * @param question
+     * 根据id获取examVo
+     * @param examId
+     * @return
+     */
+    @GetMapping("/get.do")
+    public ServerResponse getExamPoById(Integer examId){
+        try {
+            ServerResponse response = examService.getExamPoById(examId);
+            return response;
+        }catch (UnauthorizedException exception){//无权限
+            return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
+        }
+    }
+    /**
+     * 修改试卷
+     * @param examVo
      * @return
      */
     @PutMapping("/update.do")
-    @ResponseBody
-    public ServerResponse updateQuestion(Question question) {
+    public ServerResponse updateExam(ExamVo examVo) {
         try {
-            ServerResponse response = questionService.updateQuestion(question);
+            ServerResponse response = examService.updateExam(examVo);
             return response;
         }catch (UnauthorizedException exception){//无权限
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
         }
     }
 
-    /**
-     * 删除试题
-     * @param ids
-     * @return
-     */
     @DeleteMapping("/delete.do")
-    @ResponseBody
-    public ServerResponse deleteQuestion(String ids) {
+    public ServerResponse delete(String ids) {
         try {
-            ServerResponse response = questionService.deleteQuestion(ids);
+            ServerResponse response = examService.delectExam(ids);
             return response;
         }catch (UnauthorizedException exception){//无权限
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());

@@ -1,63 +1,25 @@
 package com.exam.pojo;
 
-public class ExamStudent {
+import lombok.Data;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+@Data
+public class ExamStudent implements Serializable {
+    private static final long serialVersionUID = -57626389942460266L;
+
     private Integer esId;
-
+    //学生的id
     private Integer studentId;
-
+    //试卷的id
     private Integer examId;
-
+    //0表示未参加考试，1表示已经参加考试
     private String status;
 
-    private Long totalScore;
-
+    //是否已经阅卷
     private String reading;
 
-    public Integer getEsId() {
-        return esId;
-    }
-
-    public void setEsId(Integer esId) {
-        this.esId = esId;
-    }
-
-    public Integer getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-    }
-
-    public Integer getExamId() {
-        return examId;
-    }
-
-    public void setExamId(Integer examId) {
-        this.examId = examId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
-
-    public Long getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(Long totalScore) {
-        this.totalScore = totalScore;
-    }
-
-    public String getReading() {
-        return reading;
-    }
-
-    public void setReading(String reading) {
-        this.reading = reading == null ? null : reading.trim();
-    }
+    //最终成绩
+    private BigDecimal totalScore;
 }

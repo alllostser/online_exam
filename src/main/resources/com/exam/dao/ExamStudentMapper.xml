@@ -22,13 +22,10 @@
     delete from exam_student
     where es_id = #{esId,jdbcType=INTEGER}
   </delete>
+<!--  插入数据-->
   <insert id="insert" parameterType="com.exam.pojo.ExamStudent">
-    insert into exam_student (es_id, student_id, exam_id, 
-      status, total_score, reading
-      )
-    values (#{esId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, 
-      #{status,jdbcType=CHAR}, #{totalScore,jdbcType=DECIMAL}, #{reading,jdbcType=CHAR}
-      )
+    insert into exam_student ( student_id, exam_id)
+    values (#{studentId,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.exam.pojo.ExamStudent">
     insert into exam_student
@@ -103,4 +100,21 @@
       reading = #{reading,jdbcType=CHAR}
     where es_id = #{esId,jdbcType=INTEGER}
   </update>
+<!--  查询考生id集合-->
+  <select id="findStudentIdsByExamIds" parameterType="integer" resultType="integer">
+    select
+    student_id
+    from exam_student
+    where exam_id = #{examId}
+  </select>
+<!--  通过试卷id删除数据-->
+  <delete id="deleteByExamId" parameterType="integer">
+    delete from exam_student where exam_id=#{examId}
+  </delete>
+
+  <select id="selectByExamIdAndStuId" resultMap="BaseResultMap">
+    select    <include refid="Base_Column_List" />
+    from exam_student
+    where exam_id=#{exmaId} and student_id=#{studentId}
+  </select>
 </mapper>

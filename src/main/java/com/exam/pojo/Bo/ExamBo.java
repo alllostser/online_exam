@@ -1,13 +1,16 @@
-package com.exam.pojo.vo;
+package com.exam.pojo.Bo;
 
-
+import com.exam.pojo.Question;
+import com.exam.pojo.SysUser;
+import com.exam.pojo.vo.UserVo;
 import com.exam.utils.BaseEntity;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 @Data
-public class ExamVo extends BaseEntity {
+public class ExamBo extends BaseEntity {
     private static final long serialVersionUID = 922283745093904434L;
 
     private Integer examId;
@@ -17,26 +20,27 @@ public class ExamVo extends BaseEntity {
     private Date examStartDate;
     //考试持续的时间，单位为分钟
     private Long examLastTime;
-    //批阅者的id
-    private Integer[] reviewerIds;
+    //批阅者集合
+    private List<UserVo> reviewers;
     //试卷的总分
     private BigDecimal score;
 
     //学生考试总分
     private BigDecimal totalScore;
 
+    private String createDate;
+
+    private String updateDate;
+
     /**
-     * 试题的id
+     * 试题的集合
      */
-    private Integer[] ids;
+    private List<Question> questions;
+
     /**
-     * 试题的id变成str
+     * 选择参加考试的学生
      */
-    private String idsStr;
-    /**
-     * 选择参加考试的学生的id
-     */
-    private Integer[] studentIds;
+    private List<UserVo> students;
 
     /**
      * 当前考试是否参加

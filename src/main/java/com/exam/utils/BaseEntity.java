@@ -1,6 +1,7 @@
 package com.exam.utils;
 
 import com.exam.pojo.SysUser;
+import com.exam.pojo.vo.ExamVo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -22,8 +23,7 @@ public class BaseEntity implements Serializable {
     /**
      * 创建日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date createDate;
+
 
     /**
      * 更新者
@@ -33,8 +33,6 @@ public class BaseEntity implements Serializable {
     /**
      * 更新日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    protected Date updateDate;
 
     /**
      * 删除标记（Y：正常；N：删除；A：审核；）

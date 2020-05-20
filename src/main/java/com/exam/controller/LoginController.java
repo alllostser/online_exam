@@ -9,15 +9,14 @@ import com.exam.utils.CodeCacheUtils;
 import com.exam.utils.Constants;
 import com.exam.utils.PoToVoUtil;
 import com.exam.utils.VerifyCodeUtil;
+import jdk.nashorn.internal.parser.Token;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +27,7 @@ import java.util.HashMap;
 
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
-@RestController
+@Controller
 @CrossOrigin
 public class LoginController {
 
@@ -40,6 +39,7 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/login.do")
+    @ResponseBody
     public ServerResponse login(String username, String password, String code) {
         //shiro
         Subject subject = SecurityUtils.getSubject();
@@ -56,12 +56,12 @@ public class LoginController {
         String trueCode = CodeCacheUtils.getKey(Constants.VALIDATE_CODE);
         //获取正确的验证码
         if (trueCode == null) {
-            return ServerResponse.serverResponseByFail(0,"session 超时");
+            return ServerResponse.serverResponseByFail(44,"session 超时");
         }
 
 
         if (StringUtils.isBlank(trueCode)) {
-            return ServerResponse.serverResponseByFail(0,"获取验证码超时");
+            return ServerResponse.serverResponseByFail(44,"获取验证码超时");
         }
         String errorMsg = "";
         HashMap map = new HashMap();
@@ -96,8 +96,9 @@ public class LoginController {
         if (StringUtils.isBlank(errorMsg)) {
             SysUser principal = (SysUser) SecurityUtils.getSubject().getPrincipal();
             UserVo userVo = PoToVoUtil.SysUserToVo(principal);
-
-            return ServerResponse.serverResponseBySucess("登陆成功",sessionid);
+            map.put("Token", sessionid);
+            map.put("login_user", userVo);
+            return ServerResponse.serverResponseBySucess("登陆成功",map);
         } else {
             return ServerResponse.serverResponseByFail(101,errorMsg);
         }
@@ -117,8 +118,13 @@ public class LoginController {
         LOGGER.info("本次生成的验证码为[" + verifyCode + "],已存放到HttpSession中");
         //设置输出的内容的类型为JPEG图像
         response.setContentType("image/jpeg");
-        BufferedImage bufferedImage = VerifyCodeUtil.generateImageCode(verifyCode, 116, 36, 5, true, new Color(249, 205, 173), null, null);
+        BufferedImage bufferedImage = VerifyCodeUtil.generateImageCode(verifyCode, 116, 36, 5, true, new Color(30, 159, 255), null, null);
         //写给浏览器
         ImageIO.write(bufferedImage, "JPEG", response.getOutputStream());
+    }
+
+    @RequestMapping("/logout.do")
+    public String logout(){
+        return "forward:/logout";
     }
 }

@@ -2,9 +2,14 @@ package com.exam.dao;
 
 import com.exam.pojo.ExamQuestion;
 
+import java.util.List;
+
 public interface ExamQuestionMapper {
     int deleteByPrimaryKey(Integer eqId);
 
+    /**
+     * 添加试卷试题关联表
+     * */
     int insert(ExamQuestion record);
 
     int insertSelective(ExamQuestion record);
@@ -14,4 +19,14 @@ public interface ExamQuestionMapper {
     int updateByPrimaryKeySelective(ExamQuestion record);
 
     int updateByPrimaryKey(ExamQuestion record);
+
+    /**
+     * 通过试卷id查找试题id
+     * */
+    List<Integer> findQuestionIdsByExamId(Integer examId);
+
+    /**
+     * 通过试卷id删除数据
+     * */
+    int deleteByExamId(Integer examId);
 }

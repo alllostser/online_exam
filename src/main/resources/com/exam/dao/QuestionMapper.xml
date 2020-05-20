@@ -72,23 +72,68 @@
     now()
     )
   </insert>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from question
-    where id = #{id,jdbcType=INTEGER}
+
+  <!--通过主键修改数据-->
+  <update id="updateQuestion" parameterType="com.exam.pojo.Question">
+    update question
+    <set>
+      <if test="type != null and type != ''">
+        type = #{type},
+      </if>
+      <if test="title != null and title != ''">
+        title = #{title},
+      </if>
+      <if test="optionA != null and optionA != ''">
+        option_a = #{optionA},
+      </if>
+      <if test="optionB != null and optionB != ''">
+        option_b = #{optionB},
+      </if>
+      <if test="optionC != null and optionC != ''">
+        option_c = #{optionC},
+      </if>
+      <if test="optionD != null and optionD != ''">
+        option_d = #{optionD},
+      </if>
+      <if test="answer != null and answer != ''">
+        answer = #{answer},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by = #{updateBy},
+      </if>
+      <if test="analyse != null and analyse != ''">
+        analyse = #{analyse},
+      </if>
+      <if test="score != null and score != ''">
+        score = #{score},
+      </if>
+      update_date = now()
+    </set>
+    where id = #{id}
+  </update>
+  <!--通过主键删除-->
+  <delete id="deleteByPrimaryKey">
+        delete from my_exam_test.question where id = #{id}
   </delete>
 
-  <update id="updateByPrimaryKey" parameterType="com.exam.pojo.Question">
-    update question
-    set type = #{type,jdbcType=CHAR},
-      option_a = #{optionA,jdbcType=VARCHAR},
-      option_b = #{optionB,jdbcType=VARCHAR},
-      option_c = #{optionC,jdbcType=VARCHAR},
-      option_d = #{optionD,jdbcType=VARCHAR},
-      score = #{score,jdbcType=DECIMAL},
-      create_by = #{createBy,jdbcType=INTEGER},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=INTEGER},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+<!--  通过主键批量删除-->
+  <delete id="deleteByIds">
+    delete from question where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+<!--  通过id查找一条试题-->
+  <select id="selectOneById" parameterType="integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from question
+    where id=#{id}
+  </select>
+  <select id="findQuestionListByExamId" resultMap="BaseResultMap" parameterType="integer">
+    select <include refid="Base_Column_List"/> from question where id in
+    <foreach collection="list" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </select>
 </mapper>

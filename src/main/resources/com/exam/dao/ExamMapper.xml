@@ -17,6 +17,12 @@
     exam_id, exam_name, exam_start_date, exam_last_time, reviewer_id, create_by, create_date, 
     update_by, update_date, score
   </sql>
+  <select id="selectOneById" parameterType="integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from exam
+    where exam_id = #{examId}
+  </select>
   <!--通过实体作为筛选条件查询-->
   <select id="queryAll" resultMap="BaseResultMap">
     select
@@ -31,4 +37,54 @@
       </if>
     </where>
   </select>
+
+  <!--新增所有列-->
+  <insert id="addExam" keyProperty="examId" useGeneratedKeys="true">
+    insert into exam(
+    <if test="examName != null and examName != ''">exam_name,</if>
+    <if test="examStartDate != null">exam_start_date,</if>
+    <if test="examLastTime != null and examLastTime != ''">exam_last_time,</if>
+<!--    <if test="reviewerId != null and reviewerId != ''">reviewer_id,</if>-->
+    <if test="createBy != null and createBy != ''">create_by,</if>
+    <if test="score != null and score != ''">score,</if>
+    create_date
+    )values(
+    <if test="examName != null and examName != ''">#{examName},</if>
+    <if test="examStartDate != null ">#{examStartDate},</if>
+    <if test="examLastTime != null and examLastTime != ''">#{examLastTime},</if>
+<!--    <if test="reviewerId != null and reviewerId != ''">#{reviewerId},</if>-->
+    <if test="createBy != null and createBy != ''">#{createBy},</if>
+    <if test="score != null and score != ''">#{score},</if>
+    now()
+    )
+  </insert>
+  <!--通过主键修改数据-->
+  <update id="updateExamById" parameterType="integer">
+    update exam
+    <set>
+      <if test="examName != null and examName != ''">
+        exam_name = #{examName},
+      </if>
+      <if test="examStartDate != null">
+        exam_start_date = #{examStartDate},
+      </if>
+      <if test="examLastTime != null">
+        exam_last_time = #{examLastTime},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy},
+      </if>
+      <if test="score != null">
+        score = #{score},
+      </if>
+      update_date = now()
+    </set>
+    where exam_id = #{examId}
+  </update>
+  <delete id="delectExamByExamId" parameterType="integer">
+    delete from exam where exam_id in
+    <foreach collection="array" item="examId" separator="," open="(" close=")">
+      #{examId}
+    </foreach>
+  </delete>
 </mapper>
