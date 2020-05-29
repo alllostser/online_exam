@@ -27,11 +27,11 @@ public class SysUser implements Serializable, AuthCachePrincipal {
 
     private Date createDate;
 
-    private Long createBy;
+    private Integer createBy;
 
     private Date updateDate;
 
-    private Long updateBy;
+    private Integer updateBy;
 
     private String remark;
 

@@ -101,7 +101,10 @@ public class Consts {
     public enum ExamStatusEnum {
         ADD_EXAM_FAILED(300,"添加试卷失败"),
         ;
-
+        public static final String  TAKE_THE_EXAN_YES="1";//1表示已经参加考试
+        public static final String TAKE_THE_EXAN_NO="0";//0表示未参加考试
+        public static final String CHECK_THE_TEST_PAPER_YES="0"; //0表示阅卷完成
+        public static final String CHECK_THE_TEST_PAPER_NO="1"; //1表示正在阅卷中
         private int status; //状态码值
         private String desc;//对状态码描述
 

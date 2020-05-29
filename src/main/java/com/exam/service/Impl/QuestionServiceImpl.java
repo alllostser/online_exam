@@ -2,12 +2,14 @@ package com.exam.service.Impl;
 
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.dao.QuestionMapper;
 import com.exam.pojo.Question;
 import com.exam.pojo.SysUser;
 import com.exam.pojo.vo.QuestionVo;
 import com.exam.service.QuestionService;
 import com.exam.utils.Convert;
+import com.exam.utils.GuavaCacheUtils;
 import com.exam.utils.PoToVoUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -30,7 +32,11 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     @RequiresRoles({"teacher"})
-    public ServerResponse findQuestionList(Question question, Integer pageNum, Integer pageSize, String orderBy) {
+    public TableDataInfo findQuestionList(Question question, Integer pageNum, Integer pageSize, String orderBy) {
+        if (GuavaCacheUtils.getKey("questionCount")==null){//如何缓存为空
+            Long count = questionMapper.getCountAll();
+            GuavaCacheUtils.setKey("questionCount",Long.toString(count));//存入缓存
+        }
         PageHelper.startPage(pageNum, pageSize);
         if (orderBy != null && !"".equals(orderBy)) {
             if (orderBy.contains("&")) {
@@ -41,15 +47,15 @@ public class QuestionServiceImpl implements QuestionService {
         }
         List<Question> questions = questionMapper.queryAll(question);
         if (questions == null || questions.size() <= 0) {
-            return ServerResponse.serverResponseByFail(0, "没有找到任何试题信息");
+            return TableDataInfo.ResponseByFail(0, "没有找到任何试题信息");
         }
         List<QuestionVo> questionVos = new ArrayList<>();
         for (Question ques : questions) {
             QuestionVo questionVo = PoToVoUtil.questionPoToVO(ques);
             questionVos.add(questionVo);
         }
-        PageInfo pageInfo = new PageInfo(questionVos);
-        return ServerResponse.serverResponseBySucess(pageInfo);
+//        PageInfo pageInfo = new PageInfo(questionVos);
+        return TableDataInfo.ResponseBySucess("", Long.valueOf(GuavaCacheUtils.getKey("questionCount")),questionVos);
     }
 
     /**
@@ -58,6 +64,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @RequiresRoles({"teacher"})
     public ServerResponse insert(Question question) {
+//        执行增删操作删除缓存
+        GuavaCacheUtils.setKey("questionCount","null");
         //1.非空判断
         if (question.getTitle() == null || "".equals(question.getTitle())) {
             return ServerResponse.serverResponseByFail(Consts.QuestionStatusEnum.TITLE_CANNOT_BE_NULL.getStatus(), Consts.QuestionStatusEnum.TITLE_CANNOT_BE_NULL.getDesc());
@@ -160,6 +168,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @RequiresRoles({"teacher"})
     public ServerResponse deleteQuestion(Integer id) {
+        //        执行增删操作删除缓存
+        GuavaCacheUtils.setKey("questionCount","null");
         //1.非空判断
         if (id == null) {
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.PARAM_NOT_EMPTY.getStatus(),Consts.StatusEnum.PARAM_NOT_EMPTY.getDesc());
@@ -178,6 +188,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @RequiresRoles({"teacher"})
     public ServerResponse deleteQuestion(String ids) {
+        //        执行增删操作删除缓存
+        GuavaCacheUtils.setKey("questionCount","null");
         //1.非空判断
         if (ids == null || StringUtils.isBlank(ids)) {
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.PARAM_NOT_EMPTY.getStatus(),Consts.StatusEnum.PARAM_NOT_EMPTY.getDesc());

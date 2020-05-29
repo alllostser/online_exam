@@ -30,16 +30,10 @@
         and type = #{type}
       </if>
       <if test="title != null and title != ''">
-        and title = #{title}
+        and title like CONCAT('%',#{title},'%')
       </if>
       <if test="analyse != null and analyse != ''">
         and analyse = #{analyse}
-      </if>
-      <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-        AND date_format(create_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-      </if>
-      <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-        AND date_format(create_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
       </if>
     </where>
   </select>
@@ -135,5 +129,9 @@
     <foreach collection="list" item="id" separator="," open="(" close=")">
       #{id}
     </foreach>
+  </select>
+<!--  获取总记录条数-->
+  <select id="getCountAll" resultType="long">
+    select count(id) from question
   </select>
 </mapper>

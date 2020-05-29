@@ -1,14 +1,15 @@
-package com.exam.commons;
+package com.exam.config;
 
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
-
+@Configuration
 public class redisCache {
     @Resource
     JedisPool jedisPool;

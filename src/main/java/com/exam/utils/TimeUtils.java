@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import javax.xml.crypto.Data;
 import java.util.Date;
 
 
@@ -41,7 +42,8 @@ public class TimeUtils {
 //    public static void main(String[] args) {
 //        Date date = TimeUtils.strToDate("2010-01-01 11:11:11");
 //        System.out.println(date);
-//        String s = TimeUtils.dateToStr(date);
+//        Date now = null;
+//        String s = TimeUtils.dateToStr(now);
 //        System.out.println(s);
 //    }
 

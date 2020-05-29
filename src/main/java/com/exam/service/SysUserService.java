@@ -1,6 +1,7 @@
 package com.exam.service;
 
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.SysUser;
 
 import java.util.List;
@@ -23,8 +24,9 @@ public interface SysUserService {
 
     /**
      * 获取用户列表
-     * */
-    ServerResponse userList(Integer userType,String keyword, Integer pageNum, Integer pageSize, String orderBy);
+     *
+     * @return*/
+    TableDataInfo userList(Integer userType, String keyword, Integer pageNum, Integer pageSize, String orderBy);
 
     /**
      * 删除用户

@@ -1,7 +1,9 @@
 package com.exam.controller;
 
 import com.exam.commons.Consts;
+import com.exam.commons.KuaY;
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.SysUser;
 import com.exam.service.SysUserService;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -12,7 +14,7 @@ import javax.annotation.Resource;
 @RestController
 @CrossOrigin
 @RequestMapping("/user")
-public class SysUserController {
+public class SysUserController extends KuaY {
     //注入service层
     @Resource
     SysUserService sysUserService;
@@ -22,8 +24,8 @@ public class SysUserController {
      * @param user
      * @return
      */
-    @RequestMapping("/add.do")
-    public ServerResponse addUser(SysUser user){
+    @PostMapping("/add.do")
+    public ServerResponse addUser(@RequestBody SysUser user){
         try{
             ServerResponse response = sysUserService.addUser(user);
             return response;
@@ -49,8 +51,8 @@ public class SysUserController {
      * @param sysUser
      * @return
      */
-    @RequestMapping("/update.do")
-    public ServerResponse updateUser(SysUser sysUser) {
+    @PostMapping("/update.do")
+    public ServerResponse updateUser(@RequestBody SysUser sysUser) {
         try{
             ServerResponse response = sysUserService.updateUser(sysUser);
             return response;
@@ -67,29 +69,30 @@ public class SysUserController {
      * @param orderBy 排序字段filedname_desc/filedname_asc
      * @return
      */
-    @GetMapping("/list.do")
-    public ServerResponse list(
-            @RequestParam(required = false)Integer userType,
-            @RequestParam(required = false,defaultValue = "")String keyword,
-            @RequestParam(value = "pageNum",required = false,defaultValue = "1") Integer pageNum,
-            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize,
-            @RequestParam(required = false,defaultValue = "")String orderBy
-    ) {
-        try {
-            ServerResponse sysUsers = sysUserService.userList(userType,keyword,pageNum,pageSize,orderBy);
-            return sysUsers;
-        }catch (UnauthorizedException exception){//无权限
-            return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
+        @GetMapping("/list.do")
+        @CrossOrigin
+        public TableDataInfo list(
+                @RequestParam(required = false)Integer userType,
+                @RequestParam(required = false,defaultValue = "")String keyword,
+                @RequestParam(value = "pageNum",required = false,defaultValue = "1") Integer pageNum,
+                @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize,
+                @RequestParam(required = false,defaultValue = "")String orderBy
+        ) {
+            try {
+                    TableDataInfo sysUsers = sysUserService.userList(userType,keyword,pageNum,pageSize,orderBy);
+                return sysUsers;
+            }catch (UnauthorizedException exception){//无权限
+                return TableDataInfo.ResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
 
+            }
         }
-    }
 
     /**
      * 删除用户
      * @param ids
      * @return
      */
-    @RequestMapping("/delect.do")
+    @RequestMapping("/delete.do")
     public ServerResponse delete(String ids) {
         try {
             ServerResponse response = sysUserService.deleteSysUserByIds(ids);

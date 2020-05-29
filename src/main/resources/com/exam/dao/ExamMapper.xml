@@ -32,9 +32,12 @@
       <if test="examName != null and examName != ''">
         and exam_name like CONCAT('%',#{examName},'%')
       </if>
-      <if test="reviewerId != null">
-        and reviewer_id = #{reviewerId}
+      <if test="examStartDate != null "><!-- 开始时间检索 -->
+        AND exam_start_date &gt;= #{examStartDate}
       </if>
+<!--      <if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;-->
+<!--        AND  exam_start_date &gt;= date_format(#{params.endTime},'%y%m%d')-->
+<!--      </if>-->
     </where>
   </select>
 
@@ -87,4 +90,9 @@
       #{examId}
     </foreach>
   </delete>
+
+<!--  获取记录条数-->
+  <select id="getCountAll" resultType="long">
+    select count(exam_id) from exam
+  </select>
 </mapper>

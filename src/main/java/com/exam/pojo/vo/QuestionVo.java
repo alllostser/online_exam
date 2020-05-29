@@ -10,7 +10,7 @@ public class QuestionVo extends BaseEntity {
     private static final long serialVersionUID = 850681683013092951L;
 
     private Integer id;
-    //问题类型：1表示单选，2表示多选，3表示天空，4表示判断，5表示问答
+    //问题类型：1表示单选，2表示多选，3表示填空，4表示判断，5表示问答
     private String type;
     //题干
     private String title;
@@ -29,7 +29,7 @@ public class QuestionVo extends BaseEntity {
     //分值
     private BigDecimal score;
     //该题的最终得分
-    private Double finalScore;
+    private BigDecimal finalScore;
 
     private String createDate;
 

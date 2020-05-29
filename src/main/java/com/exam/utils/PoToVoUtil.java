@@ -13,6 +13,9 @@ import java.util.Date;
 public class PoToVoUtil {
 
     public static UserVo SysUserToVo(SysUser user){
+        if (user == null){
+            return null;
+        }
         UserVo userVo = new UserVo();
         userVo.setId(user.getId());
         userVo.setLoginName(user.getLoginName());
@@ -23,8 +26,9 @@ public class PoToVoUtil {
         userVo.setLocked(user.getLocked());
         userVo.setCreateDate(TimeUtils.dateToStr(user.getCreateDate()));
         userVo.setUpdateDate(TimeUtils.dateToStr(user.getUpdateDate()));
-        userVo.setDelFlag(user.getDelFlag());
-        userVo.setUserType(user.getUserType());
+        userVo.setUserType(user.getUserType()==1?"管理员":user.getUserType()==2?"教师":"考生");
+        userVo.setCreateBy(user.getCreateBy());
+        userVo.setUpdateBy(user.getUpdateBy());
         return userVo;
     }
     public static QuestionVo questionPoToVO(Question question){
@@ -32,7 +36,7 @@ public class PoToVoUtil {
         questionVo.setAnalyse(question.getAnalyse());
         questionVo.setAnswer(question.getAnswer());
         questionVo.setCreateBy(question.getCreateBy());
-        questionVo.setCreateDate(TimeUtils.dateToStr(question.getCreateDate()));
+        questionVo.setCreateDate(TimeUtils.dateToStr(question.getCreateDate(),"yyyy-MM-dd"));
         questionVo.setScore(question.getScore());
         questionVo.setId(question.getId());
         questionVo.setOptionA(question.getOptionA());
@@ -42,7 +46,7 @@ public class PoToVoUtil {
         questionVo.setTitle(question.getTitle());
         questionVo.setType(question.getType());
         questionVo.setUpdateBy(question.getUpdateBy());
-        questionVo.setUpdateDate(TimeUtils.dateToStr(question.getUpdateDate()));
+        questionVo.setUpdateDate(question.getUpdateDate()!=null?TimeUtils.dateToStr(question.getUpdateDate(),"yyyy-MM-dd"):null);
         return questionVo;
     }
     public static ExamVo examPoToVo(Exam exam){

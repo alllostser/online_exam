@@ -30,8 +30,10 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from sys_user
-    where id = #{id,jdbcType=INTEGER}
+    delete from sys_user where id in
+    <foreach collection="array" close=")" open="(" separator="," item="id">
+      #{id}
+    </foreach>
   </delete>
   <insert id="insert" parameterType="com.exam.pojo.SysUser">
     insert into sys_user (id, login_name, nick_name, 
@@ -247,5 +249,9 @@
       <foreach collection="list" item="id" separator="," open="(" close=")">
         #{id}
       </foreach>
+  </select>
+<!--  统计记录条数-->
+  <select id="selectAllCount" resultType="integer">
+    select count(id) from sys_user
   </select>
 </mapper>

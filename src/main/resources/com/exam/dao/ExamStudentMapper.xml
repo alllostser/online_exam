@@ -5,101 +5,20 @@
     <id column="es_id" jdbcType="INTEGER" property="esId" />
     <result column="student_id" jdbcType="INTEGER" property="studentId" />
     <result column="exam_id" jdbcType="INTEGER" property="examId" />
+    <result column="reviewer_id" jdbcType="INTEGER" property="reviewerId"/>
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="total_score" jdbcType="DECIMAL" property="totalScore" />
     <result column="reading" jdbcType="CHAR" property="reading" />
   </resultMap>
   <sql id="Base_Column_List">
-    es_id, student_id, exam_id, status, total_score, reading
+    es_id, student_id, exam_id,reviewer_id,status, total_score, reading
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from exam_student
-    where es_id = #{esId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from exam_student
-    where es_id = #{esId,jdbcType=INTEGER}
-  </delete>
+
 <!--  插入数据-->
   <insert id="insert" parameterType="com.exam.pojo.ExamStudent">
     insert into exam_student ( student_id, exam_id)
     values (#{studentId,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.exam.pojo.ExamStudent">
-    insert into exam_student
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="esId != null">
-        es_id,
-      </if>
-      <if test="studentId != null">
-        student_id,
-      </if>
-      <if test="examId != null">
-        exam_id,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="totalScore != null">
-        total_score,
-      </if>
-      <if test="reading != null">
-        reading,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="esId != null">
-        #{esId,jdbcType=INTEGER},
-      </if>
-      <if test="studentId != null">
-        #{studentId,jdbcType=INTEGER},
-      </if>
-      <if test="examId != null">
-        #{examId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=CHAR},
-      </if>
-      <if test="totalScore != null">
-        #{totalScore,jdbcType=DECIMAL},
-      </if>
-      <if test="reading != null">
-        #{reading,jdbcType=CHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.exam.pojo.ExamStudent">
-    update exam_student
-    <set>
-      <if test="studentId != null">
-        student_id = #{studentId,jdbcType=INTEGER},
-      </if>
-      <if test="examId != null">
-        exam_id = #{examId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=CHAR},
-      </if>
-      <if test="totalScore != null">
-        total_score = #{totalScore,jdbcType=DECIMAL},
-      </if>
-      <if test="reading != null">
-        reading = #{reading,jdbcType=CHAR},
-      </if>
-    </set>
-    where es_id = #{esId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.exam.pojo.ExamStudent">
-    update exam_student
-    set student_id = #{studentId,jdbcType=INTEGER},
-      exam_id = #{examId,jdbcType=INTEGER},
-      status = #{status,jdbcType=CHAR},
-      total_score = #{totalScore,jdbcType=DECIMAL},
-      reading = #{reading,jdbcType=CHAR}
-    where es_id = #{esId,jdbcType=INTEGER}
-  </update>
 <!--  查询考生id集合-->
   <select id="findStudentIdsByExamIds" parameterType="integer" resultType="integer">
     select
@@ -111,10 +30,30 @@
   <delete id="deleteByExamId" parameterType="integer">
     delete from exam_student where exam_id=#{examId}
   </delete>
-
+<!--  根据exam的id和stu的id获取单条记录-->
   <select id="selectByExamIdAndStuId" resultMap="BaseResultMap">
     select    <include refid="Base_Column_List" />
     from exam_student
     where exam_id=#{exmaId} and student_id=#{studentId}
   </select>
+<!--  根据试卷的id和学生的id，更换它的状态-->
+  <update id="updateStatusByExamIdAndStuId">
+    update exam_student set status=#{status} where student_id=#{stuId} and exam_id=#{examId}
+  </update>
+<!--  根据studentId和exam的id更新成绩-->
+  <update id="updateReadingAndTotalScoreByStuIdAndExamId">
+        update exam_student set reading=#{reading},total_score=#{score} where student_id=#{stuId} and exam_id=#{examId}
+  </update>
+<!--  根据examId获取ExamStudent实体类的信息-->
+  <select id="selectByExamId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from exam_student
+    where exam_id=#{examId}
+  </select>
+<!--  根据studentId和exam的id更新成绩和添加阅卷人id-->
+  <update id="updateReadingAndTotalScoreAndReviewerIdByStuIdAndExamId">
+        update exam_student
+        set reading=#{reading},total_score=#{score},reviewer_id=#{reviewerId}
+        where student_id=#{stuId} and exam_id=#{examId}
+  </update>
 </mapper>

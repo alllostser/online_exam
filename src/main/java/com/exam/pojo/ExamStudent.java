@@ -14,6 +14,8 @@ public class ExamStudent implements Serializable {
     private Integer studentId;
     //试卷的id
     private Integer examId;
+    //阅卷人id
+    private Integer reviewerId;
     //0表示未参加考试，1表示已经参加考试
     private String status;
 

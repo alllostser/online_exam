@@ -9,7 +9,7 @@ public interface ExamQuestionMapper {
 
     /**
      * 添加试卷试题关联表
-     * */
+     */
     int insert(ExamQuestion record);
 
     int insertSelective(ExamQuestion record);
@@ -22,11 +22,16 @@ public interface ExamQuestionMapper {
 
     /**
      * 通过试卷id查找试题id
-     * */
+     */
     List<Integer> findQuestionIdsByExamId(Integer examId);
 
     /**
      * 通过试卷id删除数据
-     * */
+     */
     int deleteByExamId(Integer examId);
+
+    /**
+     * 根据Exam的id查询出所有的examQuestion实体
+     */
+    List<ExamQuestion> selectExamQuestionListByExamId(Integer examId);
 }

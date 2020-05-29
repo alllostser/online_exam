@@ -32,7 +32,7 @@
         <property name="sessionIdCookieEnabled" value="false"/>
         <property name="sessionIdUrlRewritingEnabled" value="false"/>
     </bean>
-    <bean class="com.exam.commons.redisCache" name="redisCache"/>
+    <bean class="com.exam.config.redisCache" name="redisCache"/>
 
 <!--    <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">-->
 <!--        <constructor-arg name="name" value="shiro.sesssion"/>-->

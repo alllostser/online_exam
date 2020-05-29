@@ -2,6 +2,7 @@ package com.exam.controller;
 
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.Question;
 import com.exam.service.QuestionService;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -25,7 +26,7 @@ public class QuestionController {
      * @return
      */
     @GetMapping("/list.do")
-    public ServerResponse list(
+    public TableDataInfo list(
             Question question,
             @RequestParam(value = "pageNum",required = false,defaultValue = "1") Integer pageNum,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize,
@@ -33,10 +34,10 @@ public class QuestionController {
     {
         try {
             System.out.println("-------"+question+"********");
-            ServerResponse response = questionService.findQuestionList(question,pageNum,pageSize,orderBy);
+            TableDataInfo response = questionService.findQuestionList(question,pageNum,pageSize,orderBy);
             return response;
         }catch (UnauthorizedException exception){//无权限
-            return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
+            return TableDataInfo.ResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
         }
     }
 
@@ -46,7 +47,7 @@ public class QuestionController {
      * @return
      */
     @PostMapping("/add.do")
-    public ServerResponse addQuestion(Question question) {
+    public ServerResponse addQuestion(@RequestBody Question question) {
         try {
             ServerResponse response = questionService.insert(question);
             return response;
@@ -61,8 +62,7 @@ public class QuestionController {
      * @return
      */
     @PutMapping("/update.do")
-    @ResponseBody
-    public ServerResponse updateQuestion(Question question) {
+    public ServerResponse updateQuestion(@RequestBody Question question) {
         try {
             ServerResponse response = questionService.updateQuestion(question);
             return response;
@@ -77,7 +77,6 @@ public class QuestionController {
      * @return
      */
     @DeleteMapping("/delete.do")
-    @ResponseBody
     public ServerResponse deleteQuestion(String ids) {
         try {
             ServerResponse response = questionService.deleteQuestion(ids);

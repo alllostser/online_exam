@@ -3,6 +3,7 @@ package com.exam.service;
 import com.exam.commons.ServerResponse;
 import com.exam.pojo.ExamStudent;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ExamStudentService {
@@ -25,4 +26,20 @@ public interface ExamStudentService {
      * 通过examId和studentId查询数据
      * */
     ExamStudent selectByExamIdAndStuId(Integer examId, Integer id);
+
+    /**
+     *结束考试,交卷
+     * */
+    ServerResponse finishExam(Integer examId, Integer userId);
+
+    /**
+     * 根据examId获取ExamStudent实体类的信息
+     * */
+    List<ExamStudent> selectByExamId(Integer examId);
+
+    /**
+     * 根据studentId和exam的id更新成绩
+     * */
+    int updateReadingAndTotalScoreAndReviewerIdByStuIdAndExamId(Integer stuId, Integer examId, BigDecimal score, String reading,Integer reviewerId);
+
 }

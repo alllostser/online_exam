@@ -30,4 +30,9 @@ public interface ExamMapper {
      * 批量删除通过examid
      * */
     int delectExamByExamId(Integer[] integers);
+
+    /**
+     * 获取记录条数
+     * */
+    Long getCountAll();
 }

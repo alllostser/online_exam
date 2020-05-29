@@ -1,16 +1,19 @@
 package com.exam.service.Impl;
 
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.dao.SysUserMapper;
 import com.exam.pojo.SysUser;
 import com.exam.pojo.vo.UserVo;
 import com.exam.service.SysUserService;
-import com.exam.utils.Constants;
-import com.exam.utils.PoToVoUtil;
+import com.exam.utils.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,11 +43,18 @@ public class SysUserServiceImpl implements SysUserService {
         if (StringUtils.isBlank(user.getPassword())) {//如果未设密码则使用默认密码
             user.setPassword(Constants.DEFAULT_PASSWORD);
         }
+        if (StringUtils.isBlank(user.getNickName())){//如果未设置昵称则自动生产昵称
+            user.setNickName(RandomNameUtils.getRandomJianHan(6));
+        }
+        SysUser loginUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+        user.setCreateBy(loginUser.getId());
         //step2:操作数据库
         int result = sysUserMapper.insertSelective(user);
         if (result <= 0) {
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.UPDATA_FAILED.getStatus(), Consts.StatusEnum.UPDATA_FAILED.getDesc());
         }
+        //清除缓存
+        GuavaCacheUtils.setKey("count", "null");
         return ServerResponse.serverResponseBySucess(Consts.StatusEnum.UPDATE_SUCCESS.getDesc());
     }
 
@@ -55,7 +65,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @return
      */
     @Override
-    @RequiresRoles({"teacher"})
+//    @RequiresRoles({"teacher"})
     public ServerResponse findUserById(Integer id) {
         //step:1参数非空判断
         if (id == null || id < 0) {
@@ -77,13 +87,19 @@ public class SysUserServiceImpl implements SysUserService {
      * @return
      */
     @Override
-    @RequiresRoles({"admin"})
-    @Transactional
     public ServerResponse updateUser(SysUser sysUser) {
+        //获取登录用户信息
+        SysUser loginUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
         //step1:非空判断
         if (sysUser.getId() == null) {
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.PARAM_NOT_EMPTY.getStatus(), Consts.StatusEnum.PARAM_NOT_EMPTY.getDesc());
         }
+        if (loginUser.getUserType()!=1){
+            if (!sysUser.getId().equals(loginUser.getId())){
+                throw new UnauthorizedException("无权限修改他人信息！");
+            }
+        }
+        sysUser.setUpdateBy(loginUser.getId());
         //操作数据库
         int result = sysUserMapper.updateByPrimaryKeySelective(sysUser);
         if (result <= 0) {
@@ -103,8 +119,13 @@ public class SysUserServiceImpl implements SysUserService {
      * @return
      */
     @Override
-    @RequiresRoles({"admin"})
-    public ServerResponse userList(Integer userType, String keyword, Integer pageNum, Integer pageSize, String orderBy) {
+    @RequiresRoles({"teacher"})
+    public TableDataInfo userList(Integer userType, String keyword, Integer pageNum, Integer pageSize, String orderBy) {
+//        统计记录条数，适应前端分页
+        if (GuavaCacheUtils.getKey("count")==null){
+            int count = sysUserMapper.selectAllCount();
+            GuavaCacheUtils.setKey("count", Integer.toString(count));
+        }
         //step1:判读是否传递了userType和keyword
         if (userType == null && (keyword == null || "".equals(keyword))) {
             //前端没有传递userType和keyword,向前端返回空的数据
@@ -120,11 +141,13 @@ public class SysUserServiceImpl implements SysUserService {
             List<SysUser> usertList = sysUserMapper.selectAll();
             List<UserVo> userVos = new ArrayList<>();
             for (SysUser user : usertList) {
-                UserVo userVo = PoToVoUtil.SysUserToVo(user);
-                userVos.add(userVo);
+                if (user!=null){
+                    UserVo userVo = PoToVoUtil.SysUserToVo(user);
+                    userVos.add(userVo);
+                }
             }
-            PageInfo pageInfo = new PageInfo(userVos);
-            return ServerResponse.serverResponseBySucess(pageInfo);
+//            PageInfo pageInfo = new PageInfo(userVos);
+            return TableDataInfo.ResponseBySucess("", Long.valueOf(GuavaCacheUtils.getKey("count")), userVos);
         }
         //step2:判断userType是否传递
 //        if (userType != -1 || userType!= null) {//传递了userType
@@ -151,12 +174,12 @@ public class SysUserServiceImpl implements SysUserService {
             userVos.add(userVo);
         }
         //构建分页模型
-        PageInfo pageInfo = new PageInfo(userVos);
+//        PageInfo pageInfo = new PageInfo(userVos);
         //step5：返回结果
         if (userVos.size() <= 0) {
-            return ServerResponse.serverResponseBySucess("无查找结果");
+            return TableDataInfo.ResponseByFail(404,"无查找结果");
         }
-        return ServerResponse.serverResponseBySucess(pageInfo);
+        return TableDataInfo.ResponseBySucess("", (long) Long.valueOf(GuavaCacheUtils.getKey("count")), userVos);
     }
 
     /**
@@ -173,16 +196,18 @@ public class SysUserServiceImpl implements SysUserService {
             return ServerResponse.serverResponseByFail(0, "没有选择任何用户");
         }
         //查数据库
-       Integer id = Integer.parseInt(ids);
-        SysUser user = sysUserMapper.selectByPrimaryKey(id);
-        if (user==null){
-            return ServerResponse.serverResponseByFail(0,"该用户已被删除");
-        }
+        Integer[] id = Convert.toIntArray(ids);
+//        SysUser user = sysUserMapper.selectByPrimaryKey(id);
+//        if (user==null){
+//            return ServerResponse.serverResponseByFail(0,"该用户已被删除");
+//        }
         //执行删除操作
         int row = sysUserMapper.deleteByPrimaryKey(id);
         if (row<=0){
             return ServerResponse.serverResponseByFail(Consts.StatusEnum.UPDATA_FAILED.getStatus(),Consts.StatusEnum.UPDATA_FAILED.getDesc());
         }
+        //清除缓存
+        GuavaCacheUtils.setKey("count", "null");
         return ServerResponse.serverResponseBySucess(row);//返回受影响行数
     }
 

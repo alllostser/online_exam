@@ -71,7 +71,6 @@ public class LoginController {
             errorMsg = "验证码错误";
         } else {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
-//            if (!subject.isAuthenticated()) {
                 try {
                     subject.login(usernamePasswordToken);
                     sessionid = (String) subject.getSession().getId();
@@ -90,7 +89,6 @@ public class LoginController {
                     } catch (UnauthorizedException e) {
                     errorMsg = "您没有得到相应的授权！";
                 }
-//            }
         }
 
         if (StringUtils.isBlank(errorMsg)) {

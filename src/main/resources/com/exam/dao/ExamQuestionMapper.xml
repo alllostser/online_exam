@@ -78,4 +78,10 @@
   <delete id="deleteByExamId" parameterType="integer">
     delete from exam_question where exam_id=#{examId}
   </delete>
+<!--  根据Exam的id查询出所有的examQuestion实体-->
+  <select id="selectExamQuestionListByExamId" resultMap="BaseResultMap" parameterType="integer">
+    select <include refid="Base_Column_List" />
+    from exam_question
+    where exam_id=#{examId}
+  </select>
 </mapper>

@@ -42,4 +42,9 @@ public interface QuestionMapper {
      * 通过问题id查询试题集合
      * */
     List<Question> findQuestionListByExamId(List<Integer> questionIds);
+
+    /**
+     * 获取总记录条数
+     * */
+    Long getCountAll();
 }

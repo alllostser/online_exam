@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface SysUserMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer[] id);
 
     int insert(SysUser record);
 
@@ -44,4 +44,9 @@ public interface SysUserMapper {
      * 根据id查找教师集合
      * */
     List<SysUser> findUserByIds(List<Integer> teacherids);
+
+    /**
+     * 统计共有多少条记录
+     * */
+    int selectAllCount();
 }

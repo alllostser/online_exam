@@ -1,15 +1,21 @@
 package com.exam.pojo.vo;
 
-
-import com.exam.utils.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+/**
+ * @ClassName ExamPaperVo
+ * @Description //TODO
+ * @Author GuXinYu
+ * @Date 2020/5/22 13:20
+ * @Version 1.0
+ **/
 @Data
-public class ExamVo extends BaseEntity {
+public class ExamPaperVo {
     private static final long serialVersionUID = 922283745093904434L;
 
     private Integer examId;
@@ -17,12 +23,11 @@ public class ExamVo extends BaseEntity {
     private String examName;
     //考试开始时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date examStartDate;
     //考试持续的时间，单位为分钟
     private Long examLastTime;
     //批阅者的id
-    private String reviewerIds;
+    private Integer reviewerId;
     //试卷的总分
     private BigDecimal score;
 
@@ -32,12 +37,11 @@ public class ExamVo extends BaseEntity {
     /**
      * 试题的id
      */
-    private String ids;
-
+    private Integer[] ids;
     /**
-     * 选择参加考试的学生的id
+     * 试题的id变成str
      */
-    private String studentIds;
+    private String idsStr;
 
     /**
      * 当前考试是否参加

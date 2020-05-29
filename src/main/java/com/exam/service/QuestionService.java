@@ -1,6 +1,7 @@
 package com.exam.service;
 
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.Question;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface QuestionService {
     /**
      * 获取试题列表
      * */
-    ServerResponse findQuestionList(Question question, Integer pageNum, Integer pageSize, String orderBy);
+    TableDataInfo findQuestionList(Question question, Integer pageNum, Integer pageSize, String orderBy);
 
     /**
      * 添加试题

@@ -1,10 +1,9 @@
 package com.exam.service;
 
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.Exam;
 import com.exam.pojo.vo.ExamVo;
-
-import java.util.List;
 
 
 public interface ExamService {
@@ -12,7 +11,7 @@ public interface ExamService {
      * 试卷列表
      * */
 
-    ServerResponse findExamList(Exam exam, Integer pageNum, Integer pageSize, String orderBy);
+    TableDataInfo findExamList(Exam exam, Integer pageNum, Integer pageSize, String orderBy);
 
     /**
      * 添加试卷
@@ -36,7 +35,23 @@ public interface ExamService {
 
     /**
      * 考生获取考试列表
-     * */
-    ServerResponse findExamListForStu(Exam exam, Integer id, Integer pageNum, Integer pageSize, String orderBy);
+     *
+     * @return*/
+    TableDataInfo findExamListForStu(Exam exam, Integer id, Integer pageNum, Integer pageSize, String orderBy);
 
+    /**
+     *  根据examId获取学生的考试的试卷信息
+     * */
+    ServerResponse getExamForStudentByExamId(Integer examId,Integer StudentId);
+
+    /**
+     * 查找需要review的试卷
+     *
+     * @return*/
+    TableDataInfo findExamListToReview(Exam exam, Integer teacherId,Integer pageNum, Integer pageSize, String orderBy);
+
+    /**
+     * 获取exam的详细信息，方便老师review
+     * */
+    ServerResponse findExamDetailToReview(Integer examId, Integer studentId);
 }

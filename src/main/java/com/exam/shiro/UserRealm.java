@@ -57,9 +57,9 @@ public class UserRealm extends AuthorizingRealm {
         if( user == null ) {
             throw new UnknownAccountException("账户"+userCode+"不存在！");
         }
-        if( user.getLocked() != 0){
-            throw new LockedAccountException(user.getLoginName()+"被锁定！");
-        }
+//        if( user.getLocked() != 0){
+//            throw new LockedAccountException(user.getLoginName()+"被锁定！");
+//        }
 
         //4.2 如果查询到了，封装查询结果，
         Object principal = user.getLoginName();

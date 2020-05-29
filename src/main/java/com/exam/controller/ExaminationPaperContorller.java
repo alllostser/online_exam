@@ -2,6 +2,7 @@ package com.exam.controller;
 
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.Exam;
 import com.exam.pojo.vo.ExamVo;
 import com.exam.service.ExamService;
@@ -33,18 +34,17 @@ public class ExaminationPaperContorller {
      * @return
      */
     @GetMapping("/list.do")
-    public ServerResponse list(
+    public TableDataInfo list(
             Exam exam,
             @RequestParam(value = "pageNum",required = false,defaultValue = "1") Integer pageNum,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize,
             @RequestParam(required = false,defaultValue = "")String orderBy)
     {
         try {
-            System.out.println("-------"+exam+"********");
-            ServerResponse response = examService.findExamList(exam,pageNum,pageSize,orderBy);
+            TableDataInfo response = examService.findExamList(exam,pageNum,pageSize,orderBy);
             return response;
         }catch (UnauthorizedException exception){//无权限
-            return ServerResponse.serverResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
+            return TableDataInfo.ResponseByFail(Consts.StatusEnum.USER_LIMITED_AUTHORITY.getStatus(),Consts.StatusEnum.USER_LIMITED_AUTHORITY.getDesc());
         }
     }
 
@@ -83,7 +83,7 @@ public class ExaminationPaperContorller {
      * @return
      */
     @PutMapping("/update.do")
-    public ServerResponse updateExam(ExamVo examVo) {
+    public ServerResponse updateExam(@RequestBody ExamVo examVo) {
         try {
             ServerResponse response = examService.updateExam(examVo);
             return response;
