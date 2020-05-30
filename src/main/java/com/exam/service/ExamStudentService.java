@@ -1,7 +1,9 @@
 package com.exam.service;
 
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.pojo.ExamStudent;
+import com.exam.pojo.vo.ScoreVo;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,5 +43,12 @@ public interface ExamStudentService {
      * 根据studentId和exam的id更新成绩
      * */
     int updateReadingAndTotalScoreAndReviewerIdByStuIdAndExamId(Integer stuId, Integer examId, BigDecimal score, String reading,Integer reviewerId);
+
+    /**
+     * 成绩详情
+     * */
+    TableDataInfo findScoreList(ScoreVo scoreVo, Integer examId, Integer pageNum, Integer pageSize, String orderBy);
+
+
 
 }

@@ -10,6 +10,18 @@
     <result column="total_score" jdbcType="DECIMAL" property="totalScore" />
     <result column="reading" jdbcType="CHAR" property="reading" />
   </resultMap>
+  <resultMap id="ScoreResultMap" type="com.exam.pojo.vo.ScoreVo">
+    <id column="es_id" jdbcType="INTEGER" property="esId" />
+    <result column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <result column="exam_id" jdbcType="INTEGER" property="examId" />
+    <result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+    <result column="exam_name" jdbcType="VARCHAR" property="examName" />
+    <result column="reviewer_id" jdbcType="INTEGER" property="reviewerId"/>
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="total_score" jdbcType="DECIMAL" property="totalScore" />
+    <result column="reading" jdbcType="CHAR" property="reading" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     es_id, student_id, exam_id,reviewer_id,status, total_score, reading
   </sql>
@@ -56,4 +68,22 @@
         set reading=#{reading},total_score=#{score},reviewer_id=#{reviewerId}
         where student_id=#{stuId} and exam_id=#{examId}
   </update>
+<!--  查询指定试卷的成绩的集合-->
+  <select id="selectScoreList" resultMap="ScoreResultMap">
+    select s.student_id as stu_id, s.exam_id, s.reviewer_id,s.status, s.total_score, s.reading, u.nick_name as stu_name,
+    e.exam_name
+    from exam_student s,
+    sys_user u,
+    exam e
+    where s.student_id = u.id
+    and e.exam_id = s.exam_id
+    and e.exam_id=#{examId}
+    <if test="scoreVo.stuName !=null and scoreVo.stuName!= ''">
+      and u.nick_name like CONCAT('%',#{scoreVo.stuName},'%')
+    </if>
+  </select>
+<!--  查询指定试卷的成绩的集合的条数-->
+  <select id="getCountAllByexamId" parameterType="integer" resultType="long">
+    select count(es_id) from exam_student where exam_id=#{examId}
+  </select>
 </mapper>

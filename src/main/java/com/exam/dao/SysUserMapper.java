@@ -49,4 +49,9 @@ public interface SysUserMapper {
      * 统计共有多少条记录
      * */
     int selectAllCount();
+
+    /**
+     * 修改密码
+     * */
+    int changePass(@Param("id") Integer id, @Param("newPassword") String newPassword);
 }

@@ -2,20 +2,27 @@ package com.exam.service.Impl;
 
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
+import com.exam.commons.TableDataInfo;
 import com.exam.dao.ExamStudentMapper;
+import com.exam.dao.SysUserMapper;
 import com.exam.pojo.ExamQuestion;
 import com.exam.pojo.ExamRecord;
 import com.exam.pojo.ExamStudent;
 import com.exam.pojo.Question;
-import com.exam.service.ExamQuestionService;
-import com.exam.service.ExamRecordService;
-import com.exam.service.ExamStudentService;
-import com.exam.service.QuestionService;
+import com.exam.pojo.vo.QuestionVo;
+import com.exam.pojo.vo.ScoreReturnVo;
+import com.exam.pojo.vo.ScoreVo;
+import com.exam.pojo.vo.UserVo;
+import com.exam.service.*;
 import com.exam.utils.BigDecimalUtil;
+import com.exam.utils.GuavaCacheUtils;
+import com.exam.utils.PoToVoUtil;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -154,4 +161,57 @@ public class ExamStudentServiceImpl implements ExamStudentService {
         return result;
     }
 
+
+    @Resource
+    private SysUserService sysUserService;
+
+    /**
+     * 成绩详情
+     * @param scoreVo
+     * @param examId
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+     * @return
+     */
+    @Override
+    public TableDataInfo findScoreList(ScoreVo scoreVo, Integer examId, Integer pageNum, Integer pageSize, String orderBy) {
+        if (GuavaCacheUtils.getKey("scoreCount")==null){//如何缓存为空
+            Long count = examStudentMapper.getCountAllByexamId(examId);
+            GuavaCacheUtils.setKey("scoreCount",Long.toString(count));//存入缓存
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        if (orderBy != null && !"".equals(orderBy)) {
+            if (orderBy.contains("&")) {
+                //filedname&desc/filedname&asc
+                String[] orderbys = orderBy.split("&");
+                PageHelper.orderBy(orderbys[0] + " " + orderbys[1]);
+            }
+        }
+        List<ScoreVo> scores = examStudentMapper.selectScoreList(scoreVo,examId);
+        if (scores == null || scores.size() <= 0) {
+            return TableDataInfo.ResponseByFail(0, "没有找到任何成绩信息");
+        }
+        List<ScoreReturnVo> scoreReturnVos = new ArrayList<>();
+        for (ScoreVo score : scores) {
+            ScoreReturnVo scoreReturnVo = new ScoreReturnVo();
+            scoreReturnVo.setExamId(score.getExamId());
+            scoreReturnVo.setExamName(score.getExamName());
+            scoreReturnVo.setReading(score.getReading());
+            scoreReturnVo.setStatus(score.getStatus());
+            scoreReturnVo.setStuId(score.getStuId());
+            scoreReturnVo.setStuName(score.getStuName());
+            scoreReturnVo.setTotalScore(score.getTotalScore());
+            if (score.getReviewerId()!=null){
+                ServerResponse userByIdResponse = sysUserService.findUserById(score.getReviewerId());
+                if (userByIdResponse.isSucess()){
+                    UserVo user = (UserVo) userByIdResponse.getData();
+                    scoreReturnVo.setReviewerName(user.getNickName());
+                }
+            }
+            scoreReturnVos.add(scoreReturnVo);
+        }
+
+        return TableDataInfo.ResponseBySucess("", Long.valueOf(GuavaCacheUtils.getKey("scoreCount")), scoreReturnVos);
+    }
 }

@@ -1,6 +1,7 @@
 package com.exam.dao;
 
 import com.exam.pojo.ExamStudent;
+import com.exam.pojo.vo.ScoreVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -46,4 +47,15 @@ public interface ExamStudentMapper {
      * 根据studentId和exam的id更新成绩和添加阅卷人id
      * */
     int updateReadingAndTotalScoreAndReviewerIdByStuIdAndExamId(@Param("stuId") Integer stuId, @Param("examId") Integer examId, @Param("score") BigDecimal score, @Param("reading") String reading,@Param("reviewerId") Integer reviewerId);
+
+    /**
+     * 查询指定试卷的成绩的集合
+     */
+    List<ScoreVo> selectScoreList(@Param("scoreVo") ScoreVo scoreVo, @Param("examId") Integer examId);
+
+    /**
+     * 查询指定试卷的成绩的集合的条数
+     * @param examId
+     */
+    Long getCountAllByexamId(Integer examId);
 }

@@ -42,4 +42,9 @@ public interface SysUserService {
      * 根据id查找教师集合
      * */
     List<SysUser> findUserByIds(List<Integer> teacherids);
+
+    /**
+     * 修改密码
+     * */
+    ServerResponse changePass(String oldPassword, String newPassword, String loginName);
 }

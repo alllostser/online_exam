@@ -6,123 +6,90 @@
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="type" jdbcType="CHAR" property="type" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_by" jdbcType="INTEGER" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="INTEGER" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    notice_id, title, content, type, create_by, create_date, update_by, update_date
+    notice_id, title, content, type, status,create_by, create_date, update_by, update_date
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+<!--  获取总记录条数-->
+  <select id="getCountAll" parameterType="com.exam.pojo.Notice" resultType="long">
+    select
+    count(notice_id)
     from notice
-    where notice_id = #{noticeId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from notice
-    where notice_id = #{noticeId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.exam.pojo.Notice">
-    insert into notice (notice_id, title, content, 
-      type, create_by, create_date, 
-      update_by, update_date)
-    values (#{noticeId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{type,jdbcType=CHAR}, #{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP})
+  <!--通过实体作为筛选条件查询-->
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from notice
+    <where>
+      <if test="title != null and title != ''">
+        and title like CONCAT('%',#{title},'%')
+      </if>
+      <if test="type != null and type != ''">
+        and type = #{type}
+      </if>
+    </where>
+  </select>
+  <!--新增所有列-->
+  <insert id="insert" parameterType="com.exam.pojo.Notice" keyProperty="noticeId" useGeneratedKeys="true">
+    insert into notice(
+    <if test="title != null and title != ''">title,</if>
+    <if test="content != null and content != ''">content,</if>
+    <if test="type != null and type != ''">type,</if>
+    <if test="status != null">status,</if>
+    <if test="createBy != null and createBy != ''">create_by,</if>
+    create_date
+    )values(
+    <if test="title != null and title != ''">#{title},</if>
+    <if test="content != null and content != ''">#{content},</if>
+    <if test="type != null and type != ''">#{type},</if>
+    <if test="status != null">#{status},</if>
+    <if test="createBy != null and createBy != ''">#{createBy},</if>
+    now()
+    )
   </insert>
-  <insert id="insertSelective" parameterType="com.exam.pojo.Notice">
-    insert into notice
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="noticeId != null">
-        notice_id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="content != null">
-        content,
-      </if>
-      <if test="type != null">
-        type,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="createDate != null">
-        create_date,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="updateDate != null">
-        update_date,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="noticeId != null">
-        #{noticeId,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="content != null">
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=CHAR},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=INTEGER},
-      </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=INTEGER},
-      </if>
-      <if test="updateDate != null">
-        #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.exam.pojo.Notice">
+
+  <!--查询单个-->
+  <select id="queryById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from notice
+        where notice_id = #{noticeId}
+  </select>
+  <!--通过主键修改数据-->
+  <update id="update" parameterType="com.exam.pojo.Notice">
     update notice
     <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
+      <if test="title != null and title != ''">
+        title = #{title},
       </if>
-      <if test="content != null">
-        content = #{content,jdbcType=VARCHAR},
+      <if test="content != null and content != ''">
+        content = #{content},
       </if>
-      <if test="type != null">
-        type = #{type,jdbcType=CHAR},
+      <if test="type != null and type != ''">
+        type = #{type},
       </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=INTEGER},
-      </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
+      <if test="status != null">
+        status = #{status},
       </if>
       <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=INTEGER},
+        update_by = #{updateBy},
       </if>
-      <if test="updateDate != null">
-        update_date = #{updateDate,jdbcType=TIMESTAMP},
-      </if>
+      update_date = now()
     </set>
-    where notice_id = #{noticeId,jdbcType=INTEGER}
+    where notice_id = #{noticeId}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.exam.pojo.Notice">
-    update notice
-    set title = #{title,jdbcType=VARCHAR},
-      content = #{content,jdbcType=VARCHAR},
-      type = #{type,jdbcType=CHAR},
-      create_by = #{createBy,jdbcType=INTEGER},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=INTEGER},
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
-    where notice_id = #{noticeId,jdbcType=INTEGER}
-  </update>
+
+<!--  批量删除-->
+  <delete id="delete" >
+    delete from notice where notice_id in
+    <foreach collection="array" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>

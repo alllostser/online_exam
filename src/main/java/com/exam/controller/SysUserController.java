@@ -6,6 +6,7 @@ import com.exam.commons.ServerResponse;
 import com.exam.commons.TableDataInfo;
 import com.exam.pojo.SysUser;
 import com.exam.service.SysUserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.*;
 
@@ -103,4 +104,16 @@ public class SysUserController extends KuaY {
         }
     }
 
+    /**
+     * 修改密码
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @PostMapping("changePass.do")
+    public ServerResponse changePass(String oldPassword,String newPassword){
+        SysUser loginUser = (SysUser) SecurityUtils.getSubject().getPrincipal();
+        ServerResponse response = sysUserService.changePass(oldPassword,newPassword,loginUser.getLoginName());
+        return response;
+    }
 }

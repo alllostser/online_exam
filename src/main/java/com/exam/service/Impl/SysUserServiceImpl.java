@@ -1,6 +1,5 @@
 package com.exam.service.Impl;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.exam.commons.Consts;
 import com.exam.commons.ServerResponse;
 import com.exam.commons.TableDataInfo;
@@ -10,13 +9,11 @@ import com.exam.pojo.vo.UserVo;
 import com.exam.service.SysUserService;
 import com.exam.utils.*;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -229,4 +226,24 @@ public class SysUserServiceImpl implements SysUserService {
         return teachers;
     }
 
+    /**
+     * 修改密码
+     * @param oldPassword
+     * @param newPassword
+     * @param loginName
+     * @return
+     */
+    @Override
+    public ServerResponse changePass(String oldPassword, String newPassword, String loginName) {
+        SysUser user = findSysUserByLoginName(loginName);
+
+        if (!user.getPassword().equals(oldPassword)){
+            return ServerResponse.serverResponseByFail(-100,"密码错误，请核对后再次尝试！");
+        }
+        int result = sysUserMapper.changePass(user.getId(),newPassword);
+        if (result<=0){
+            return ServerResponse.serverResponseByFail(Consts.StatusEnum.UPDATA_FAILED.getStatus(),Consts.StatusEnum.UPDATA_FAILED.getDesc());
+        }
+        return ServerResponse.serverResponseBySucess(Consts.StatusEnum.UPDATE_SUCCESS.getDesc(),result);
+    }
 }

@@ -2,32 +2,30 @@ package com.exam.pojo.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
- * @ClassName ScoreVo
- * @Description //TODO
+ * @ClassName ScoreReturnVo
+ * @Description //返回前端的成绩实体类
  * @Author GuXinYu
- * @Date 2020/5/22 17:52
+ * @Date 2020/5/31 0:27
  * @Version 1.0
  **/
 @Data
-public class ScoreVo {
+public class ScoreReturnVo implements Serializable {
     /**
      * 学生的id
      */
     private Integer stuId;
-    /**
-     * 学生学号
-     */
-    private String stuNum;
     /**
      * 学生姓名
      */
     private String stuName;
 
     /**
-     * 阅卷人id
+     * 阅卷人姓名
      * */
-    private Integer reviewerId;
+    private String reviewerName;
     /**
      * 试卷的id
      */

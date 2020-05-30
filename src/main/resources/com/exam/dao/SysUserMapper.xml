@@ -254,4 +254,9 @@
   <select id="selectAllCount" resultType="integer">
     select count(id) from sys_user
   </select>
+
+<!--  修改密码-->
+  <update id="changePass">
+    update sys_user set password=#{newPassword} where id=#{id}
+  </update>
 </mapper>
